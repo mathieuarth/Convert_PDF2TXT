@@ -103,13 +103,35 @@ This PowerShell script is designed to monitor a specified folder for new PDF fil
   - Ensures the log directory exists.
   - Formats the log entry with a timestamp and message type.
   - Appends the log entry to the log file.
+
+---
+
+### **8. Get-Config**
+- **Purpose:** Get the actual configuration data.
+- **Key Actions:**
+  - Initialize actual configuration data with default values.
+  - Check if there is a config.json file available.
+  - Integrate the values from the file to the configuration object.
 - **Example Usage:**
   ```powershell
-  Write-Log -Message "Service started successfully." -MessageType "Info"
+  Convert-PDF2TXT -PDFPath "C:\Files\example.pdf"
   ```
 
 ---
 
+### **9. Save-Config**
+- **Purpose:** Save the actual configuration data to the config.json file.
+- **Parameters:**
+  - `config` (Mandatory): Configuration data object.
+- **Key Actions:**
+  - Check if folder exist.
+  - Save the configuration data
+- **Example Usage:**
+  ```powershell
+  Save-Config -Config $Config_Data
+  ```
+
+---
 ## **Global Variables**
 - `$global:Config`: Stores configuration settings such as the folder to monitor, log file path, and recursion flag.
 - `$global:watcher`: Instance of `FileSystemWatcher` for monitoring the folder.
