@@ -17,6 +17,9 @@ To uninstall the service you open a command prompt with admin rights and execute
 ```bash
 convert_PDF2TXT.exe /u
 ```
+
+Check out the [Installation Document](./Documentations/Installation.md) for additionnal information.
+
 ## Usage/Examples
 
 The service will use a standard configuration if no config.json is provided in the application folder.
@@ -35,8 +38,7 @@ By default it will be,
 - Output_Folder : empty, this means that the TXT file will be located in the same location as the PDF file.
 - Recursive ; true, it will also monitor the child folders.
 
-
-
+Check out the [Config Document](./Documentations/Config.md) for additionnal information.
 
 ## Documentations
 
