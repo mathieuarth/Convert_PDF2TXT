@@ -2,7 +2,7 @@
 	.NOTES
 	===========================================================================
 	 Created with: 	SAPIEN Technologies, Inc., PowerShell Studio 2024 v5.8.250
-	 Created on:   	08/05/2025 08:00
+	 Created on:   	12/05/2025 12:00
 	 Created by:   	mathieu.arth@econocom.com
 	 Organization: 	Econocom
 	 Filename:     	convert_pdf2txt
@@ -39,30 +39,15 @@ function Start-MyService
 		$configFilePath = Join-Path -Path $scriptDirectory -ChildPath "config.json"
 		
 		# Define the standard/default configuration
-		$global:Config = @{
-			Folder_to_monitor = $scriptDirectory
-			Output_Folder	  = ""
-			Log_File		  = Join-Path -Path $scriptDirectory -ChildPath "$scriptName.log"
-			Recursive		  = $true
-		}
-		
-		# Check if the config file exists
-		if (Test-Path -Path $configFilePath)
+		$global:Config = Get-Config
+		try
 		{
-			Write-Log -LogFile $global:Config.Log_File -Message "Config file   : Found config file, loading " -MessageType "Info"
-			try
-			{
-				# Load the configuration from the file
-				$global:Config = ConvertFrom-Json -InputObject (Get-Content -Path $configFilePath -Raw)
-			}
-			catch
-			{
-				Write-Log -LogFile $global:Config.Log_File -Message "Config file  : Error reading configuration file: $($_.Exception.Message)" -MessageType "Error"
-			}
+			Save-Config $global:Config
+			Write-Log -LogFile $global:Config.Log_File -Message "Config file   : Saving actual configuration. " -MessageType "Info"
 		}
-		else
+		catch
 		{
-			Write-Log -LogFile $global:Config.Log_File -Message "Config file: Configuration file not found. Using default configuration." -MessageType "Warning"
+			Write-Log -LogFile $global:Config.Log_File -Message "Config file   : Save error $($_.Exception.Message)" -MessageType "Error"
 		}
 		
 		# Log service information
@@ -258,8 +243,8 @@ function Convert-PDF2TXT
 	
 	if (Test-Path -Path $PDFPath -ErrorAction SilentlyContinue)
 	{
-		$Filechk = Get-ChildItem $PDFPath | Select-Object Extension
-		if ($Filechk.Extension -notmatch ".pdf")
+		$extension = [System.IO.Path]::GetExtension($PDFPath)
+		if ($extension -notmatch ".pdf")
 		{
 			Write-Log -LogFile $global:Config.Log_File -Message "Convertion   : Selected file is not a PDF file or have an wrong extension ! " -MessageType "Error"
 		}
@@ -306,4 +291,64 @@ function Write-Log
 	
 	# Append the log entry to the log file
 	Add-Content -Path $LogFile -Value $logEntry
+}
+
+# Function to get the default or saved configuration
+function Get-Config
+{
+	# Define the standard/default configuration
+	$defaultConfig = @{
+		Folder_to_monitor = $scriptDirectory
+		Output_Folder	  = ""
+		Log_File		  = Join-Path -Path $scriptDirectory -ChildPath "$scriptName.log"
+		Recursive		  = $true
+	}
+	
+	# Initialize final config with defaults
+	$finalConfig = $defaultConfig.Clone()
+	
+	# Check if the config file exists
+	if (Test-Path -Path $global:configFilePath)
+	{
+		Write-Log -LogFile $defaultConfig.Log_File -Message "Config file   : Found config file, loading " -MessageType "Info"
+		try
+		{
+			# Load the configuration from the file
+			$userConfig = Get-Content -Path $global:configFilePath | ConvertFrom-Json
+			
+			# Merge user config into defaults
+			foreach ($key in $userConfig.PSObject.Properties.Name)
+			{
+				$finalConfig[$key] = $userConfig.$key
+			}
+		}
+		catch
+		{
+			Write-Log -LogFile $defaultConfig.Log_File -Message "Config file  : Error reading configuration file: $($_.Exception.Message)" -MessageType "Error"
+		}
+	}
+	else
+	{
+		Write-Log -LogFile $defaultConfig.Log_File -Message "Config file: Configuration file not found. Using default configuration." -MessageType "Warning"
+	}
+	
+	# Return the final configuration
+	Save-Config -Config $finalConfig
+	return $finalConfig
+}
+
+# Function to save configuration
+function Save-Config
+{
+	param (
+		[Parameter(Mandatory = $true)]
+		[PSCustomObject]$Config
+	)
+	# Ensure the config directory exists
+	$configDirectory = [System.IO.Path]::GetDirectoryName($global:configFilePath)
+	if (!(Test-Path -Path $configDirectory))
+	{
+		New-Item -ItemType Directory -Path $configDirectory -Force | Out-Null
+	}
+	$Config | ConvertTo-Json -Depth 10 | Set-Content -Path $global:configFilePath
 }
