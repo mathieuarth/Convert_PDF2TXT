@@ -40,9 +40,9 @@ By default it will be,
 
 Check out the [Config Document](./Documentations/Config.md) for additionnal information.
 
-## [Documentations](./Documentations)
+## Documentations
 
-The documentation can be found under the Documentations folder.
+The documentation for this project can be found under the [Documentations](./Documentations) folder.
 ## Support
 
 For support, email [Support](31592338+marth1974@users.noreply.github.com).
