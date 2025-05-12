@@ -36,7 +36,7 @@ function Start-MyService
 		$scriptVersion = (Get-Item $scriptPath).VersionInfo.FileVersion
 		
 		# Define the path to the config file
-		$configFilePath = Join-Path -Path $scriptDirectory -ChildPath "config.json"
+		$global:configFilePath = Join-Path -Path $scriptDirectory -ChildPath "config.json"
 		
 		# Define the standard/default configuration
 		$global:Config = Get-Config
