@@ -112,10 +112,6 @@ This PowerShell script is designed to monitor a specified folder for new PDF fil
   - Initialize actual configuration data with default values.
   - Check if there is a config.json file available.
   - Integrate the values from the file to the configuration object.
-- **Example Usage:**
-  ```powershell
-  Convert-PDF2TXT -PDFPath "C:\Files\example.pdf"
-  ```
 
 ---
 
