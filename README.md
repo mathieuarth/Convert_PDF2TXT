@@ -40,9 +40,7 @@ By default it will be,
 
 Check out the [Config Document](./Documentations/Config.md) for additionnal information.
 
-## Documentations
-
-[Documentations](./Documentations)
+## [Documentations](./Documentations)
 
 The documentation can be found under the Documentations folder.
 ## Support
