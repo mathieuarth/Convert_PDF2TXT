@@ -139,12 +139,12 @@ This PowerShell script is designed to monitor a specified folder for new PDF fil
 ---
 
 ## **Configuration**
+The content will be found in a `config.json` file located in the same folder as the service file, if not it will use the default values.  
 The script relies on a global configuration object (`$global:Config`) with the following properties:
 - `Folder_to_monitor`: Path to the folder to monitor. (default:folder where the service file is located)
 - `Log_File`: Path to the log file. (default:convert_pdf2txt.log)
 - `Recursive`: Boolean flag to enable/disable recursive monitoring. (default:true)
 - `Output_Folder`: Path to the folder where converted TXT files will be saved. (default:"")  
-The content will be found in a `config.json` file located in the same folder as the service file, if not it will use the default values.
 ---
 
 ## **Error Handling**
@@ -159,33 +159,44 @@ The content will be found in a `config.json` file located in the same folder as 
 
 ## **Usage Instructions**
 
-### **1. Start the Service**
+### **1. Install the Service**
+Run the following command to install the service:
+```powershell
+convert_pdf2txt.exe /i
+```
+
+### **2. Start the Service**
 Run the following command to start the service:
 ```powershell
 start-service "convert_pdf2txt"
 ```
 
-### **2. Monitor Folder**
+### **3. Monitor Folder**
 The service will automatically monitor the specified folder for new PDF files and convert them to TXT files.
 
-### **3. Pause the Service**
+### **4. Pause the Service**
 To pause the service, run:
 ```powershell
 suspend-service "convert_pdf2txt"
 ```
 
-### **4. Resume the Service**
+### **5. Resume the Service**
 To resume the service, run:
 ```powershell
 resume-service "convert_pdf2txt"
 ```
 
-### **5. Stop the Service**
+### **6. Stop the Service**
 To stop the service, run:
 ```powershell
 stop-service "convert_pdf2txt"
 ```
 
+### **7. Uninstall the Service**
+To uninstall the service, run:
+```powershell
+convert_pdf2txt.exe /u
+```
 ---
 
 ## **Example Workflow**
